@@ -2,13 +2,17 @@ import WebSocket, { WebSocketServer } from 'ws';
 import { login } from './handlers/login';
 import { updateRoom } from './handlers/updateRoom';
 import { generateID } from './helpers/generateId';
-import { updateWinners } from './handlers/updateWinners';
-
 
 export const wss = new WebSocketServer({ port: 3000 });
 
+const players = new Map();
 
 wss.on('connection', function connection(socket: WebSocket.WebSocket) {
+	const playerId = generateID();
+
+	players.set(playerId, socket);
+
+
 
 	socket.on('message', function message(data) {
 
@@ -26,11 +30,18 @@ wss.on('connection', function connection(socket: WebSocket.WebSocket) {
 				const createdRoom = updateRoom(params);
 				// const updatedWinners = updateWinners(params);
 				socket.send(JSON.stringify(createdRoom));
-				// socket.send(JSON.stringify(updatedWinners))
+			// socket.send(JSON.stringify(updatedWinners))
 			default:
 				console.warn(`Type: ${type} unknown`);
 				break;
 		}
+	});
+
+
+	socket.on('close', () => {
+		console.log(`WebSocket connection with player ${playerId} closed.`);
+
+		players.delete(playerId);
 	});
 });
 
