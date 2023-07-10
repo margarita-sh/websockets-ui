@@ -6,7 +6,7 @@ import { players } from '../server';
 import { User } from '../interface/user';
 import { createRoom } from './createRoom';
 
-export const login = function (params: any, playerId: string) {
+export const login = function (params: any, playerId: number) {
 	const dataParsed = JSON.parse(params);
 	const userData = {...dataParsed, id: playerId};
 	

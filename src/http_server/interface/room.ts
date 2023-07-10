@@ -7,7 +7,7 @@ export class Room {
 	public isOpen!: boolean; 
 	constructor() {
 		this.roomId = Math.floor(Math.random() * 1000000);
-		this.isOpen = this.roomUsers.length < 2 ? true : false;
+		this.isOpen = this.roomUsers.length <= 2 ? true : false;
 	}
 
 	addUserToRoom(user: User){
@@ -16,7 +16,7 @@ export class Room {
 			const player = USERS_DATABASE.find((player: User) =>  player.id === user.id);
 			if(player) player.roomId = this.roomId;
 		}else{
-			createRoom()
+			createRoom();
 		}
 	}
 }

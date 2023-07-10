@@ -6,8 +6,8 @@ import { players } from '../server';
 export const updateRoom = () => {
 	let room!: Room | undefined;
 	for (let [key, value] of players) {
-		room = ROOMS_DATABASE.find((room: Room) => {
-			return room.roomUsers.find((user) => {
+		room = ROOMS_DATABASE.find((r: Room) => {
+			return r.roomUsers.find((user) => {
 				if (user.id === key) {
 					return true
 				} else {
@@ -24,7 +24,9 @@ export const updateRoom = () => {
 			[
 				JSON.stringify({
 					roomId: room?.roomId,
-					roomUsers: room?.roomUsers.map((user:User) => JSON.stringify({name: user.name, index: user.id})),
+					roomUsers: room?.roomUsers.map((user:User) => {
+						return {name: user.name, index: user.id}
+					}),
 				}),
 			],
 		id: 0,
