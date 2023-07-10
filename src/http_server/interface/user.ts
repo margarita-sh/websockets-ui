@@ -1,7 +1,7 @@
 export class User {
 	name: string;
 	password: string;
-	id: string;
+	id: number;
 	roomId?: number;
 	wins?: number;
 	constructor(params: any) {

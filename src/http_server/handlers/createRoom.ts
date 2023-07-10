@@ -1,4 +1,3 @@
-import { ROOMS_DATABASE, USERS_DATABASE } from '../database';
 import { Room } from '../interface/room';
 
 export const createRoom = () => {

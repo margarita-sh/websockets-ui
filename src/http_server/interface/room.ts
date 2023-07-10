@@ -11,12 +11,10 @@ export class Room {
 	}
 
 	addUserToRoom(user: User){
-		if(this.isOpen && user.roomId === undefined){
+		if(this.isOpen){
 			this.roomUsers.push(user);
 			const player = USERS_DATABASE.find((player: User) =>  player.id === user.id);
 			if(player) player.roomId = this.roomId;
-		}else{
-			createRoom();
 		}
 	}
 }

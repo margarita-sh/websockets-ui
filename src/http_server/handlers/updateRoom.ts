@@ -1,21 +1,18 @@
 import { ROOMS_DATABASE} from '../database';
 import { Room } from '../interface/room';
 import { User } from '../interface/user';
-import { players } from '../server';
 
-export const updateRoom = () => {
-	let room!: Room | undefined;
-	for (let [key, value] of players) {
+export const updateRoom = (playerId: number) => {
+	let room!: Room | undefined; 
 		room = ROOMS_DATABASE.find((r: Room) => {
 			return r.roomUsers.find((user) => {
-				if (user.id === key) {
+				if (user.id === playerId) {
 					return true
 				} else {
 					return false;
 				}
 			})
 		});
-	};
 
 
 	return {

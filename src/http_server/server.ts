@@ -21,12 +21,12 @@ wss.on('connection', function connection(socket: WebSocket.WebSocket) {
 
 		const type = obj.type;
 		const params = obj.data;
-		const createdRoom = updateRoom();
+		const createdRoom = updateRoom(playerId);
 		switch (type) {
 			case 'reg':
 				const response = login(params, playerId);
 				socket.send(JSON.stringify(response));
-				sendUpdateRoomToAll(createdRoom);
+				// sendUpdateRoomToAll(createdRoom);
 				// updateWinnersToAll();
 				break;
 			case 'create_room':
@@ -50,9 +50,7 @@ wss.on('connection', function connection(socket: WebSocket.WebSocket) {
 
 function sendUpdateRoomToAll(createdRoom: any) {
 	players.forEach(function each(client) {
-		// Check if the connection is still open
 		if (client.readyState === WebSocket.OPEN) {
-			// console.log('ROOMS_DATABASE', ROOMS_DATABASE[0].roomUsers);
 			console.log('createdRoom', createdRoom);
 			client.send(JSON.stringify(createdRoom));
 		}
@@ -62,7 +60,6 @@ function sendUpdateRoomToAll(createdRoom: any) {
 
 function updateWinnersToAll() {
 	players.forEach(function each(client) {
-		// Check if the connection is still open
 		if (client.readyState === WebSocket.OPEN) {
 			client.send(JSON.stringify(updateWinners()));
 		}
