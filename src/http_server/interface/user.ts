@@ -3,7 +3,8 @@ export class User {
 	password: string;
 	id: number;
 	roomId?: number;
-	wins?: number;
+	gameId?: number;
+	wins = 0;
 	constructor(params: any) {
 		this.name = params.name;
 		this.password = params.password;

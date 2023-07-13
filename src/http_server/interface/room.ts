@@ -1,5 +1,4 @@
 import { User } from './user';
-import { createRoom } from '../handlers/createRoom';
 import { USERS_DATABASE } from '../database';
 export class Room {
 	public roomId: number;

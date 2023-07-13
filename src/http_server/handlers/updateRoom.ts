@@ -18,14 +18,14 @@ export const updateRoom = (playerId: number) => {
 	return {
 		type: "update_room",
 		data:
-			[
-				JSON.stringify({
+		JSON.stringify([
+				{
 					roomId: room?.roomId,
 					roomUsers: room?.roomUsers.map((user:User) => {
 						return {name: user.name, index: user.id}
 					}),
-				}),
-			],
+				},
+			]),
 		id: 0,
 	}
 }
