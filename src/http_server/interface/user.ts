@@ -5,6 +5,7 @@ export class User {
 	roomId?: number;
 	gameId?: number;
 	wins = 0;
+	ships = [];
 	constructor(params: any) {
 		this.name = params.name;
 		this.password = params.password;

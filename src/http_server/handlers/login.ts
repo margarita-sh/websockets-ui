@@ -4,6 +4,7 @@ import { createUser } from '../handlers/createUser';
 import { Room } from '../interface/room';
 import { User } from '../interface/user';
 import { createRoom } from './createRoom';
+import { SOCKET_MESSAGE_TYPE } from '../interface/socketMessages';
 
 export const login = function (params: any, playerId: number) {
 	const dataParsed = JSON.parse(params);
@@ -23,7 +24,7 @@ export const login = function (params: any, playerId: number) {
 					ROOMS_DATABASE.push(room);
 			};
 		return {
-			type: "reg",
+			type: SOCKET_MESSAGE_TYPE.REG,
 			data:
 				JSON.stringify({
 					name: user.name,
@@ -35,7 +36,7 @@ export const login = function (params: any, playerId: number) {
 		};
 	}
 	return {
-		type: "reg",
+		type: SOCKET_MESSAGE_TYPE.REG,
 		data:
 			JSON.stringify({
 				name: '',

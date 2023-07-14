@@ -1,5 +1,6 @@
 import { ROOMS_DATABASE} from '../database';
 import { Room } from '../interface/room';
+import { SOCKET_MESSAGE_TYPE } from '../interface/socketMessages';
 import { User } from '../interface/user';
 
 export const updateRoom = (playerId: number) => {
@@ -16,7 +17,7 @@ export const updateRoom = (playerId: number) => {
 
 
 	return {
-		type: "update_room",
+		type: SOCKET_MESSAGE_TYPE.UPDATE_ROOM,
 		data:
 		JSON.stringify([
 				{
