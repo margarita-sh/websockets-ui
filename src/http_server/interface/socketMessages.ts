@@ -9,6 +9,6 @@ export enum SOCKET_MESSAGE_TYPE {
 	START_GAME = "start_game",
 	ATTACK = "attack",
 	TURN = "turn",
-	RANDOM_ATTACK = "random_attack",
+	RANDOM_ATTACK = "randomAttack",
 	FINISH = "finish",
 }

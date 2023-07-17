@@ -10,6 +10,6 @@ export function assignShipsToPlayer(params: any) {
 	if (player) {
 		player.ships = ships;
 	}
-	return player;
 
+	return player;
 }

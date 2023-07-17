@@ -1,26 +1,44 @@
 import WebSocket from 'ws';
-import { GAME_DATABASE, USERS_DATABASE } from '../database';
+import { USERS_DATABASE } from '../database';
 import { players } from '../server';
 import { SOCKET_MESSAGE_TYPE } from '../interface/socketMessages';
 
-export function attack(gameId: number){
+import { handleShot } from './handleShot';
+
+export let CURRENT_PLAYER_ATTACKER: number;
+
+export function attack(attack: any) {
+
+	const { x, y, gameId, indexPlayer } = attack;
+	CURRENT_PLAYER_ATTACKER = indexPlayer;
 
 	const playersinTheGame = USERS_DATABASE.filter((player) => player.gameId === gameId);
 	const idsPlayersinTheGame = playersinTheGame.map((player) => player.id);
 
-	const game = GAME_DATABASE.find(game => game.gameId === gameId);
+	const enemyPlayer = playersinTheGame.find(player => player.id !== indexPlayer);
+	const currentPlayer = playersinTheGame.find(player => player.id === indexPlayer);
 
+	let attackResult;
+
+	if(enemyPlayer && currentPlayer) {
+		attackResult = handleShot(currentPlayer, enemyPlayer, x, y);	
+	}
+	
 	for (let [key, value] of players) {
 		if (value.readyState === WebSocket.OPEN && idsPlayersinTheGame.includes(key)) {
-			value.send(JSON.stringify(	{
+			value.send(JSON.stringify({
 				type: SOCKET_MESSAGE_TYPE.ATTACK,
-				data:
+				data: JSON.stringify(
 					{
-						gameId: <number>,
-						x: <number>,
-						y: <number>,
-						indexPlayer: <number>, /* id of the player in the current game */
-					},
+						position:
+						{
+							x: x,
+							y: y,
+						},
+						currentPlayer: indexPlayer, 
+						status: attackResult,
+					}
+				),
 				id: 0,
 			}));
 		}

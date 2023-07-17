@@ -3,7 +3,7 @@ import { login } from './handlers/login';
 import { updateRoom } from './handlers/updateRoom';
 import { generateID } from './helpers/generateId';
 import { createGame } from './handlers/createGame';
-import { GAME_DATABASE } from './database';
+import { GAME_DATABASE, USERS_DATABASE } from './database';
 import { SOCKET_MESSAGE_TYPE } from './interface/socketMessages';
 import { sendUpdateRoomToAll } from './handlers/sendUpdateRoomToAll';
 import { createGameToPlayers } from './handlers/createGameToPlayers';
@@ -12,6 +12,7 @@ import { sendPlayerTurn } from './handlers/sendPlayerTurn';
 import { updateWinnersToAll } from './handlers/updateWinnersToAll';
 import { assignShipsToPlayer } from './handlers/assignShipsToPlayer';
 import { attack } from './handlers/attack';
+import { User } from './interface/user';
 
 
 export const wss = new WebSocketServer({ port: 3000 });
@@ -55,11 +56,45 @@ wss.on('connection', function connection(socket: WebSocket.WebSocket) {
 				};
 				break;
 			case SOCKET_MESSAGE_TYPE.ATTACK:
-				attack()
-				sendPlayerTurn(gameId);
-				break;
+				const idGame = JSON.parse(params).gameId;
+				const currentPlayer = JSON.parse(params).indexPlayer;
+				const game = GAME_DATABASE.find(game => game.gameId === idGame)
+
+				if (game?.gameUsers.find(user => user.id === currentPlayer) && game.turn === currentPlayer) {
+					const attackRequest = JSON.parse(params);
+					attack(attackRequest);
+					sendPlayerTurn(idGame);
+				} else {
+					return;
+				} break;
 			case SOCKET_MESSAGE_TYPE.RANDOM_ATTACK:
-				sendPlayerTurn(gameId);
+
+				const idGameRandom = JSON.parse(params).gameId;
+
+				const currentPlayerRandom = JSON.parse(params).indexPlayer;
+
+				const currentGame = GAME_DATABASE.find(game => game.gameId === idGameRandom);
+
+				const userGrid: string[][] | undefined = USERS_DATABASE?.find(user => user.id === currentPlayerRandom)?.grid; //где-то ошибка
+
+				if(!userGrid) return;
+				
+				const positions = findFirstEmptyCell(userGrid, currentPlayerRandom);
+	
+				if (currentGame?.gameUsers.find(user => user.id === currentPlayerRandom)) {
+					const data = {
+						x: positions?.row,
+						y: positions?.col,
+						gameId: idGameRandom,
+						indexPlayer: currentPlayerRandom
+					};
+					
+
+					attack(data);
+					sendPlayerTurn(idGameRandom);
+				} else {
+					return;
+				}
 				break;
 			default:
 				console.warn(`Type: ${type} unknown`);
@@ -69,7 +104,27 @@ wss.on('connection', function connection(socket: WebSocket.WebSocket) {
 
 	socket.on('close', () => {
 		console.log(`WebSocket connection with player ${playerId} closed.`);
-
 		players.delete(playerId);
 	});
 });
+
+function findFirstEmptyCell(grid: string[][], currentPlayer: number): { row: number; col: number } | any {
+	for (let row = 0; row < grid.length; row++) {
+	  for (let col = 0; col < grid[row].length; col++) {
+		if (grid[row][col] === '') {
+		  return { row, col };
+		}
+	  }
+	}
+	return JSON.stringify(
+		{
+			type: "finish",
+			data:
+				JSON.stringify({
+					winPlayer: currentPlayer
+				}),
+			id: 0,
+		
+	}); 
+  }
+  
