@@ -1,17 +1,16 @@
 import WebSocket from 'ws';
-import { USERS_DATABASE } from '../database';
+import { GAME_DATABASE, USERS_DATABASE } from '../database';
 import { players } from '../server';
 import { SOCKET_MESSAGE_TYPE } from '../interface/socketMessages';
 
 import { handleShot } from './handleShot';
 
-export let CURRENT_PLAYER_ATTACKER: number;
-
 export function attack(attack: any) {
 
 	const { x, y, gameId, indexPlayer } = attack;
-	CURRENT_PLAYER_ATTACKER = indexPlayer;
 
+	const currentGame = GAME_DATABASE.find(game => game.gameId === gameId);
+	currentGame?.setAttacker(indexPlayer);
 	const playersinTheGame = USERS_DATABASE.filter((player) => player.gameId === gameId);
 	const idsPlayersinTheGame = playersinTheGame.map((player) => player.id);
 

@@ -1,4 +1,5 @@
-import { CURRENT_PLAYER_ATTACKER, attack } from '../handlers/attack';
+import { GAME_DATABASE } from '../database';
+import { attack } from '../handlers/attack';
 import { Ship } from './ship';
 
 import { STATUS_SHIP } from './statusShip';
@@ -72,7 +73,7 @@ export class User {
 							x: j,
 							y: i,
 							gameId: this.gameId,
-							indexPlayer: CURRENT_PLAYER_ATTACKER
+							indexPlayer: GAME_DATABASE.find(game=> game.gameId === this.gameId)?.currentAttacker
 						})
 					}
 				}

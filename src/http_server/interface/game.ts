@@ -4,11 +4,11 @@ import { USERS_DATABASE } from '../database';
 export class Game {
 	public gameId: number;
 	public gameUsers: User[] = [];
-	public turn: number;
+	public turn!: number;
+	public currentAttacker!: number;
 
 	constructor() {
 		this.gameId = Math.floor(Math.random() * 1000000);
-		this.turn = 0;
 	}
 
 	public addUserToGame(user: User) {
@@ -19,5 +19,9 @@ export class Game {
 
 	public setTurn(turn: number) {
 		this.turn = turn;
+	}
+
+	public setAttacker(attacker: number) {
+		this.currentAttacker = attacker;
 	}
 }

@@ -83,8 +83,8 @@ wss.on('connection', function connection(socket: WebSocket.WebSocket) {
 	
 				if (currentGame?.gameUsers.find(user => user.id === currentPlayerRandom)) {
 					const data = {
-						x: positions?.row,
-						y: positions?.col,
+						x: positions?.col,
+						y: positions?.row,
 						gameId: idGameRandom,
 						indexPlayer: currentPlayerRandom
 					};
@@ -109,13 +109,13 @@ wss.on('connection', function connection(socket: WebSocket.WebSocket) {
 });
 
 function findFirstEmptyCell(grid: string[][], currentPlayer: number): { row: number; col: number } | any {
-	for (let row = 0; row < grid.length; row++) {
-	  for (let col = 0; col < grid[row].length; col++) {
-		if (grid[row][col] === '') {
-		  return { row, col };
-		}
-	  }
-	}
+	const emptyRowIndex = grid.findIndex(row => row.includes(""));
+  
+	if (emptyRowIndex !== -1) {
+	  const emptyColumnIndex = grid[emptyRowIndex].indexOf("");
+	  return {row: emptyRowIndex, col: emptyColumnIndex};
+	}else{
+	
 	return JSON.stringify(
 		{
 			type: "finish",
@@ -126,5 +126,6 @@ function findFirstEmptyCell(grid: string[][], currentPlayer: number): { row: num
 			id: 0,
 		
 	}); 
+}
   }
   
